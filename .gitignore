@@ -20,6 +20,8 @@ env/
 .coverage
 htmlcov/
 *.sqlite3
+*.db
+pramaan.db
 
 # ---- Node / Next.js ----
 node_modules/

@@ -1,0 +1,45 @@
+"""ORM models + enums, re-exported for `from app.models import X`."""
+from app.models.entities import (  # noqa: F401
+    AuditEvent,
+    Bid,
+    Bidder,
+    CheckResult,
+    ComplianceScore,
+    DebarmentRecord,
+    Decision,
+    Document,
+    EntityEdge,
+    EntityNode,
+    Evidence,
+    Identifier,
+    ProviderCall,
+    Recommendation,
+    Tender,
+    TenderRequirement,
+    User,
+    VerificationRun,
+)
+from app.models.enums import (  # noqa: F401
+    CHECK_KEYS,
+    Dimension,
+    DecisionOutcome,
+    EvidenceKind,
+    IdentifierKind,
+    ProviderMode,
+    RecommendationStance,
+    RiskBand,
+    RunStatus,
+    TenderStatus,
+    UserRole,
+    Verdict,
+)
+
+__all__ = [
+    "AuditEvent", "Bid", "Bidder", "CheckResult", "ComplianceScore",
+    "DebarmentRecord", "Decision", "Document", "EntityEdge", "EntityNode",
+    "Evidence", "Identifier", "ProviderCall", "Recommendation", "Tender",
+    "TenderRequirement", "User", "VerificationRun",
+    "CHECK_KEYS", "Dimension", "DecisionOutcome", "EvidenceKind",
+    "IdentifierKind", "ProviderMode", "RecommendationStance", "RiskBand",
+    "RunStatus", "TenderStatus", "UserRole", "Verdict",
+]
