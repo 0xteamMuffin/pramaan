@@ -1,0 +1,69 @@
+# PRAMAAN — Provider configuration (EXAMPLE)
+# Copy to `providers.yaml` (gitignored) and adjust. Secrets come from .env, never here.
+# See docs/03-architecture/provider-abstraction.md
+
+mode_defaults:
+  government: live_then_mock   # live_then_mock | mock_only | live_only
+  offline: false               # true => force local AI + mock/snapshot everywhere (demo safety)
+
+# ---------------- Government data providers (one chain per check) ----------------
+government:
+  gst:        { chain: [sandbox_gst, mock_gst] }
+  pan:        { chain: [sandbox_pan, mock_pan] }
+  mca:        { chain: [sandbox_mca, mock_mca] }
+  udyam:      { chain: [sandbox_udyam, mock_udyam] }
+  digilocker: { chain: [sandbox_digilocker, mock_digilocker] }
+  epfo:       { chain: [mock_epfo] }        # no student-accessible API -> mock
+  esic:       { chain: [mock_esic] }
+  nsic:       { chain: [mock_nsic] }
+  bis:        { chain: [mock_bis] }
+  startup:    { chain: [mock_startup] }
+  oem:        { chain: [mock_oem] }
+  debarment:  { chain: [snapshot_debarment] }  # World Bank + CPPP snapshot, fuzzy search
+
+  adapters:
+    sandbox_gst:   { type: sandbox, base_url_env: SANDBOX_BASE_URL, key_env: SANDBOX_KEY, secret_env: SANDBOX_SECRET, endpoint: gst }
+    sandbox_pan:   { type: sandbox, endpoint: pan }
+    sandbox_mca:   { type: sandbox, endpoint: mca }
+    sandbox_udyam: { type: sandbox, endpoint: udyam }
+    sandbox_digilocker: { type: sandbox, endpoint: digilocker }
+    # mock_* adapters read deterministic fixtures from data/fixtures/gov/<check>/<id>.json
+    snapshot_debarment: { type: snapshot, dataset: data/blacklists/ }
+
+# ---------------- AI: LLM reasoning ----------------
+llm:
+  chain: [gemini_flash, groq_gptoss, openrouter_free, ollama_local]
+  providers:
+    gemini_flash:    { type: gemini,        model: "gemini-2.5-flash",  api_key_env: GEMINI_API_KEY }
+    groq_gptoss:     { type: openai_compat,  base_url: "https://api.groq.com/openai/v1",  model: "openai/gpt-oss-120b", api_key_env: GROQ_API_KEY }
+    openrouter_free: { type: openai_compat,  base_url: "https://openrouter.ai/api/v1",    model: "meta-llama/llama-3.1-8b-instruct:free", api_key_env: OPENROUTER_API_KEY }
+    ollama_local:    { type: openai_compat,  base_url: "http://localhost:11434/v1",       model: "qwen3:8b", api_key_env: NONE }
+
+# ---------------- AI: OCR / document extraction ----------------
+ocr:
+  chain: [gemini_vision, paddleocr_local, docai_cloud]
+  providers:
+    gemini_vision:   { type: gemini_vision,      model: "gemini-2.5-flash" }
+    paddleocr_local: { type: paddleocr,          pipeline: "PP-StructureV3", lang: "multi" }
+    docai_cloud:     { type: google_document_ai, processor_env: DOCAI_PROCESSOR }
+
+# ---------------- AI: embeddings / RAG ----------------
+embeddings:
+  chain: [bge_m3_local, gemini_embed]
+  providers:
+    bge_m3_local: { type: sentence_transformers, model: "BAAI/bge-m3" }
+    gemini_embed: { type: gemini, model: "gemini-embedding-001" }
+
+vectordb: { type: pgvector }   # or { type: chroma, path: "./.chroma" }
+
+# ---------------- Forgery / tamper detection pipeline ----------------
+forgery:
+  steps: [metadata_exiftool, pdf_incremental_check, ela, copy_move, trufor_optional, llm_field_crosscheck]
+
+# ---------------- Resilience ----------------
+resilience:
+  retry_on: [429, 500, 502, 503, 504, timeout]
+  max_retries_per_provider: 2
+  cache:
+    gov_ttl_seconds: 86400
+    ocr_by_file_hash: true
