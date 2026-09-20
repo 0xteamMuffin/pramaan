@@ -47,6 +47,11 @@ uploads/
 tmp/
 .cache/
 
+# ---- generated synthetic data (regenerated deterministically by `python -m app.seed`) ----
+data/fixtures/gov/
+data/fixtures/docs/
+data/blacklists/*.json
+
 # ---- OS / editor ----
 .DS_Store
 Thumbs.db
