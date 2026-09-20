@@ -253,6 +253,17 @@ def seed(reset: bool = False) -> dict:
             counts["debarment"] += 1
         db.commit()
 
+        # ---- pre-run verification for every bid so the DB is demo-ready ----
+        from app.compliance import engine as comp_engine  # lazy; avoid shadowing DB engine
+
+        counts["runs"] = 0
+        for bid in db.query(Bid).all():
+            try:
+                comp_engine.run_verification(db, bid.id)
+                counts["runs"] += 1
+            except Exception as exc:  # noqa: BLE001
+                print(f"  ! verification failed for bid {bid.id}: {exc}")
+
         audit.record(db, action="seed.completed", target="dataset",
                      payload={k: v for k, v in counts.items()})
         return counts
