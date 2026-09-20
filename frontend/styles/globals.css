@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   PRAMAAN design tokens — from docs/04-design/design-system.md
+   Colours are stored as space-separated RGB channels so Tailwind opacity
+   modifiers (e.g. bg-ink-900/40) work via rgb(var(--token) / <alpha-value>).
+   Components reference these through the Tailwind theme — no raw hex.
+   ========================================================================== */
+:root {
+  /* Brand core */
+  --primary: 11 61 145; /* #0B3D91 */
+  --primary-dark: 5 37 110; /* #05256E */
+  --primary-darker: 7 34 46; /* #07222E */
+  --primary-light: 59 111 196; /* #3B6FC4 */
+  --primary-50: 234 241 251; /* #EAF1FB */
+  --secondary: 245 130 31; /* #F5821F */
+  --secondary-dark: 217 108 11; /* #D96C0B */
+  --secondary-50: 254 241 228; /* #FEF1E4 */
+  --accent-teal: 15 163 163; /* #0FA3A3 */
+
+  /* Semantic / status */
+  --success: 26 127 55; /* #1A7F37 */
+  --success-bg: 231 244 236; /* #E7F4EC */
+  --warning: 199 119 0; /* #C77700 */
+  --warning-bg: 252 243 227; /* #FCF3E3 */
+  --danger: 192 57 43; /* #C0392B */
+  --danger-bg: 251 234 232; /* #FBEAE8 */
+  --info: 11 111 176; /* #0B6FB0 */
+  --info-bg: 230 241 249; /* #E6F1F9 */
+
+  /* Neutrals (slate) */
+  --ink-900: 15 23 42; /* #0F172A */
+  --ink-700: 51 65 85; /* #334155 */
+  --ink-500: 100 116 139; /* #64748B */
+  --border: 226 232 240; /* #E2E8F0 */
+  --surface-2: 241 245 249; /* #F1F5F9 */
+  --surface-1: 248 250 252; /* #F8FAFC */
+  --white: 255 255 255; /* #FFFFFF */
+
+  /* RAG score scale */
+  --rag-high: 192 57 43; /* 0-39   */
+  --rag-medium: 199 119 0; /* 40-69  */
+  --rag-low: 26 127 55; /* 70-100 */
+  --rag-track: 148 163 184;
+
+  /* Page + typographic rhythm */
+  --page-bg: 248 250 252;
+  --font-scale: 1;
+}
+
+/* Dark theme — retint tokens, keep semantic hues legible on dark surfaces */
+[data-theme="dark"] {
+  --primary: 111 155 232;
+  --primary-dark: 10 42 99;
+  --primary-darker: 4 18 26;
+  --primary-light: 147 182 240;
+  --primary-50: 20 39 68;
+  --secondary: 247 155 70;
+  --secondary-dark: 245 130 31;
+  --secondary-50: 58 42 23;
+  --accent-teal: 63 196 196;
+
+  --success: 87 192 123;
+  --success-bg: 20 48 31;
+  --warning: 224 169 74;
+  --warning-bg: 51 40 15;
+  --danger: 233 112 100;
+  --danger-bg: 56 32 29;
+  --info: 87 168 222;
+  --info-bg: 18 41 58;
+
+  --ink-900: 241 245 249;
+  --ink-700: 203 213 225;
+  --ink-500: 148 163 184;
+  --border: 36 52 77;
+  --surface-2: 22 35 58;
+  --surface-1: 15 26 46;
+  --white: 22 35 58;
+
+  --rag-high: 233 112 100;
+  --rag-medium: 224 169 74;
+  --rag-low: 87 192 123;
+  --rag-track: 71 85 105;
+
+  --page-bg: 11 20 36;
+}
+
+/* High-contrast — sharpen borders & ink for low-vision users */
+[data-contrast="high"] {
+  --ink-900: 0 0 0;
+  --ink-700: 17 24 39;
+  --ink-500: 31 41 55;
+  --border: 71 85 105;
+  --primary: 6 42 115;
+  --success: 18 102 43;
+  --warning: 154 90 0;
+  --danger: 150 39 27;
+  --info: 8 78 125;
+}
+
+[data-contrast="high"][data-theme="dark"] {
+  --ink-900: 255 255 255;
+  --ink-700: 226 232 240;
+  --border: 100 116 139;
+}
+
+* {
+  border-color: rgb(var(--border));
+}
+
+html {
+  font-size: calc(100% * var(--font-scale));
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: rgb(var(--page-bg));
+  color: rgb(var(--ink-900));
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tabular numbers for scores / tables */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Visible focus ring everywhere (accessibility) */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid rgb(var(--primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+[data-theme="dark"] :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline-color: rgb(var(--primary-light));
+}
+
+/* Skip-to-content link */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  z-index: 100;
+  background: rgb(var(--primary-dark));
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgb(var(--surface-2));
+  border-radius: 6px;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: shimmer 1.6s infinite;
+}
+[data-theme="dark"] .skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--rag-track));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Optional: highlight-links accessibility toggle */
+[data-highlight-links="on"] a:not(.no-hl) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
