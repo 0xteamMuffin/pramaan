@@ -1,0 +1,45 @@
+# PRAMAAN — one-command demo stack. Runs with an EMPTY .env (SQLite + mock/offline AI).
+# From repo root:  docker compose -f infra/docker/docker-compose.yml up --build
+#
+# To go "live", add keys to a root .env (GEMINI_API_KEY, SANDBOX_KEY/SECRET, ...)
+# and they will be picked up by the api service.
+
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.api
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../../.env            # optional; safe if absent (empty-key rule)
+    environment:
+      CORS_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.web
+      args:
+        NEXT_PUBLIC_API_BASE: "http://localhost:8000/api/v1"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+# --- Optional: Postgres + pgvector (production DB). To use it, uncomment and set
+#     DATABASE_URL=postgresql+psycopg://pramaan:pramaan@db:5432/pramaan in the api env.
+#  db:
+#    image: pgvector/pgvector:pg16
+#    environment:
+#      POSTGRES_USER: pramaan
+#      POSTGRES_PASSWORD: pramaan
+#      POSTGRES_DB: pramaan
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
+# volumes:
+#   pgdata:

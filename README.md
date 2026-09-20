@@ -77,22 +77,52 @@ gem-sih/
 └── scripts/                  ← utilities
 ```
 
+## Run it (works with an EMPTY `.env` — no keys required)
+
+> The whole platform runs end-to-end offline with deterministic mock/heuristic
+> providers. Add keys later to upgrade any check to **live**.
+
+**Option A — Docker (one command):**
+```bash
+docker compose -f infra/docker/docker-compose.yml up --build
+# web → http://localhost:3000   ·   api → http://localhost:8000/docs
+```
+
+**Option B — Local:**
+```bash
+# backend
+cd backend && python -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+python -m app.seed --reset        # seed synthetic bidders/tenders (deterministic)
+uvicorn app.main:app --reload     # http://localhost:8000  (Swagger at /docs)
+# frontend (new terminal)
+cd frontend && npm install && npm run dev   # http://localhost:3000
+```
+Demo login: **officer@pramaan.gov.in** / **pramaan123** (also analyst@/auditor@/admin@).
+
+To go live later, drop keys into a root `.env` (see `.env.example`): `GEMINI_API_KEY`,
+`GROQ_API_KEY`, `SANDBOX_KEY`/`SANDBOX_SECRET`, etc. Missing keys → automatic mock fallback.
+
 ## Start Here
 
 1. [`docs/README.md`](docs/README.md) — documentation index
-2. [`docs/00-problem-statement/problem-statement.md`](docs/00-problem-statement/problem-statement.md) — the PS + our analysis
-3. [`docs/02-planning/vision-and-goals.md`](docs/02-planning/vision-and-goals.md) — what we're building and why
+2. [`AGENTS.md`](AGENTS.md) — locked decisions & conventions (read before contributing)
+3. [`docs/00-problem-statement/problem-statement.md`](docs/00-problem-statement/problem-statement.md) — the PS + our analysis
 4. [`docs/03-architecture/system-architecture.md`](docs/03-architecture/system-architecture.md) — how it all fits together
 
 ---
 
 ## Status
 
-🟢 **Phase 0 — Research, Planning & Scaffold** (current). Deep research complete; documentation & repo hierarchy in place.
-⚪ Phase 1 — Core backend + provider layer + mock adapters
-⚪ Phase 2 — AI verification & compliance engine
-⚪ Phase 3 — Dashboard & audit report
-⚪ Phase 4 — Wow features (entity graph, forgery, comparison) + demo polish
+🟢 **Full-stack build complete (autopilot).** Runs end-to-end with an empty `.env`.
+
+| Layer | State |
+|---|---|
+| Backend (FastAPI) | ✅ foundation, 18-check compliance+AI engine, provider layer (mock/live/snapshot), hash-chained audit, REST API |
+| Data | ✅ deterministic 9-bidder fraud cast + 3 tenders; golden outcomes verified end-to-end |
+| Frontend (Next.js) | ✅ 11 screens, ~35 components; `npm run build` passes; live API + demo fallback |
+| Infra | ✅ docker-compose + dev scripts |
+
+**Verified golden outcomes:** B1 LOW · B2/B8 MEDIUM · B3 (forgery+OEM) · B4 (PAN-mismatch+GST-cancelled) · B5 (shell) · B6/B7 (cartel) · B9 (debarment) all HIGH. Audit chain integrity ✓.
 
 See the full plan in [`docs/02-planning/roadmap.md`](docs/02-planning/roadmap.md).
 

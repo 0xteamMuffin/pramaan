@@ -82,9 +82,22 @@ cd frontend && npm install && npm run dev   # http://localhost:3000
 ```
 
 ## Current status / progress log
-- ✅ Phase 0: research + docs + repo scaffold (8 commits).
-- �build: full-stack implementation on autopilot (backend + frontend + data + infra).
+- ✅ Phase 0: research + docs + repo scaffold.
+- ✅ Full-stack build on autopilot (backend + frontend + data + infra). Runs with empty `.env`.
 - Keep this section updated: what's done, what's next, known issues.
 
 ### Progress
-- (append entries here as modules complete)
+- ✅ Backend foundation: config (empty-key rule), SQLAlchemy models (18 tables), enums, provider/compliance contracts, JWT+RBAC, app factory.
+- ✅ Provider registry facade + fallbacks (HeuristicLLM/FixtureOCR/MockGov/inline forensics); auto-upgrades to LIVE with keys.
+- ✅ Shared services: hash-chained audit ledger (+verify), debarment fuzzy search.
+- ✅ Compliance + AI engine: 18 checks, weighted scoring + vetoes + policy cap, entity graph (shell/cartel), forgery, recommendation. `engine.run_verification` / `build_tender_graph`.
+- ✅ Synthetic data: `gen_ids/gen_tenders/gen_bidders/gen_documents` + `app.seed` (9-bidder cast, gov fixtures, debarment snapshot). Golden outcomes verified end-to-end.
+- ✅ REST API: auth, tenders (list/detail/comparison/graph/evaluate), bidders, verification (verdict/verify/decision), debarment, providers (mode/offline), audit (list/verify), metrics (summary/time-savings), reports (PDF). Serializers match `frontend/lib/types.ts` exactly.
+- ✅ Frontend: Next.js 11 screens + ~35 components, GeM tokens, live API + demo fallback; `npm run build` passes.
+- ✅ Infra: docker-compose (api+web), `scripts/dev.sh`, `scripts/seed.sh`.
+
+### Known issues / next
+- `high_risk_count` on the tender LIST is derived from persisted runs (seed pre-runs all bids, so it's correct after seeding).
+- Provider live adapters (Sandbox.co.in) are structured but only exercised when keys are present; mocks cover 100% otherwise.
+- Optional heavy AI (real Gemini/Groq/PaddleOCR) are import-guarded; not required.
+- Next candidates: per-check re-run endpoint, bulk tender ranking UI polish, live adapter integration tests when keys added.
