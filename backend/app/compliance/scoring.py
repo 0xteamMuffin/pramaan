@@ -120,6 +120,19 @@ def score_run(
     if vetoes:
         band = RiskBand.HIGH.value
 
+    # ---- policy cap: a clean (LOW) numeric band cannot stand when a mandatory
+    # eligibility criterion actually FAILED, or when multiple WARNs pile up.
+    # In procurement, any failed mandatory criterion => "not clean" => at least
+    # MEDIUM / needs scrutiny. This keeps the score explainable AND realistic
+    # (a high average must not mask a hard failure). Vetoes already force HIGH.
+    non_veto_fails = [
+        o for o in check_outputs if o.verdict == Verdict.FAIL.value and not o.is_veto
+    ]
+    warn_count = sum(1 for o in check_outputs if o.verdict == Verdict.WARN.value)
+    if not vetoes and band == RiskBand.LOW.value and (non_veto_fails or warn_count >= 2):
+        band = RiskBand.MEDIUM.value
+        score = min(score, BAND_LOW_MIN - 1)  # keep gauge consistent with band
+
     # ---- top reasons (vetoes -> fails -> warns -> unverifiable-critical) ----
     reasons_top: list[str] = []
     for v in vetoes:

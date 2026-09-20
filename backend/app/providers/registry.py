@@ -136,7 +136,8 @@ class MockGovProvider(GovProvider):
         return None
 
     def _load_fixture(self, ident: str) -> dict | None:
-        p = fixture_gov_dir() / self.check_key / f"{ident}.json"
+        safe = str(ident).replace("/", "_").replace("\\", "_")
+        p = fixture_gov_dir() / self.check_key / f"{safe}.json"
         if p.exists():
             try:
                 return json.loads(p.read_text(encoding="utf-8"))
