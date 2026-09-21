@@ -5,7 +5,7 @@
 
 ## What this project is
 **PRAMAAN** — AI-Powered Integrated Bid Compliance Verification Platform for GeM Procurement.
-SIH 2025, Problem Statement **26100** (MoP&NG → CPCL). Full context: `docs/00-problem-statement/problem-statement.md`.
+SIH 2026, Problem Statement **26100** (MoP&NG → CPCL). Full context: `docs/00-problem-statement/problem-statement.md`.
 
 The platform verifies bidder eligibility & statutory compliance for GeM tenders (Udyam, GST, PAN, MCA, EPFO/ESIC, MII, Startup, NSIC, OEM, DigiLocker, BIS, debarment), runs an explainable compliance engine, detects forgery/fraud/cartels, and produces an auditable verdict + AI recommendation. **The officer makes the final decision — AI is advisory only.**
 

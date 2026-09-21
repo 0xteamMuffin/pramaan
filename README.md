@@ -10,7 +10,7 @@
 
 An AI decision support platform that verifies bidder eligibility and statutory compliance for Government e-Marketplace (GeM) procurement. It turns days of manual, multi portal document checking into minutes of explainable, auditable, evidence backed assessment. The officer always makes the final decision.
 
-![Smart India Hackathon 2025](https://img.shields.io/badge/Smart%20India%20Hackathon-2025-05256E)
+![Smart India Hackathon 2026](https://img.shields.io/badge/Smart%20India%20Hackathon-2026-05256E)
 ![Problem Statement](https://img.shields.io/badge/Problem%20Statement-26100-0B3D91)
 ![Backend](https://img.shields.io/badge/Backend-FastAPI-009688)
 ![Frontend](https://img.shields.io/badge/Frontend-Next.js-000000)

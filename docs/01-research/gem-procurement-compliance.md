@@ -1,6 +1,6 @@
 # Research Report — AI-Powered Integrated Bid Compliance Verification Platform for GeM Procurement
 
-**SIH 2025 · Problem Statement 26100 · Ministry of Petroleum & Natural Gas / Chennai Petroleum Corporation Limited (CPCL)**
+**SIH 2026 · Problem Statement 26100 · Ministry of Petroleum & Natural Gas / Chennai Petroleum Corporation Limited (CPCL)**
 
 > Purpose: a factual, source-cited research base for building an automated platform that ingests a bidder's documents/registrations, verifies them against issuing authorities, cross-checks consistency across portals, and produces a compliance score + risk classification for the procurement officer. All source URLs are cited inline.
 

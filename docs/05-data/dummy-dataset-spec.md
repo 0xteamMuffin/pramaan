@@ -48,7 +48,7 @@ Design **~4 bidders per tender**, spanning outcomes. Core cast (reused across te
 | **B2 — Bharat Micro Traders** | Claims **Micro/MSE** | Turnover/GST scale inconsistent with "Micro"; **Udyam name ≠ PAN name** | WARN classification + name-mismatch → MEDIUM |
 | **B3 — Chola Infra LLP** | Reseller quoting a brand | **Forged/expired OEM MAF** (tampered PDF) + **BIS number belongs to another brand** | Forgery veto + BIS mismatch → HIGH |
 | **B4 — Deccan Supplies** | Looks normal | **PAN on GST ≠ PAN on Udyam** (identity fraud); GST **cancelled** | PAN-mismatch veto + inactive-GST veto → HIGH |
-| **B5 — Everest Enterprises** | New entity | **CIN incorporation year 2025** but claims 5-yr experience; **no EPFO/ESIC footprint** (shell) | Shell signals + experience fail → HIGH |
+| **B5 — Everest Enterprises** | New entity | **CIN incorporation year 2026** but claims 5-yr experience; **no EPFO/ESIC footprint** (shell) | Shell signals + experience fail → HIGH |
 | **B6 — Falcon Services** & **B7 — Garuda Facilities** | Two "competitors" in T2 | **Shared director DIN + address + bank + submission IP**; near-identical pricing | Cartel/related-party graph → HIGH for both |
 | **B8 — Hind Startup Labs** | DPIIT startup in T3 | Valid startup, claims exemption on **resold** (non-innovative) item | WARN — exemption scope check |
 | **B9 — Indus Corp** | Otherwise ok | **Director DIN matches debarment snapshot** | Debarment veto → HIGH |

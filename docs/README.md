@@ -1,6 +1,6 @@
 # PRAMAAN — Documentation Index
 
-This is the knowledge base for the **AI-Powered Integrated Bid Compliance Verification Platform for GeM Procurement** (SIH 2025, PS 26100). Read top to bottom for a full understanding, or jump to what you need.
+This is the knowledge base for the **AI-Powered Integrated Bid Compliance Verification Platform for GeM Procurement** (SIH 2026, PS 26100). Read top to bottom for a full understanding, or jump to what you need.
 
 > All research is source-cited. Policy thresholds (turnover caps, MII %, preference margins) change with government circulars — always re-verify against the latest DPIIT/DoE/MSME notifications and the live GeM GTC before hard-coding rules.
 
