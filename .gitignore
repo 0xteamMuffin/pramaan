@@ -63,3 +63,7 @@ Thumbs.db
 # ---- Docker / logs ----
 *.log
 logs/
+
+# ---- agent/session transcripts ----
+session-*.md
+session_*.md
