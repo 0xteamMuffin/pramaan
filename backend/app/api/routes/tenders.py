@@ -1,22 +1,68 @@
 """Tender routes: list, detail, comparison, graph, evaluate."""
 from __future__ import annotations
 
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
+from pydantic import BaseModel, Field
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.models import Tender
+from app.models import Tender, TenderRequirement
 from app.services import serializers
 from app.services import audit
 
 router = APIRouter(prefix="/tenders", tags=["tenders"])
 
 
+class RequirementIn(BaseModel):
+    check_key: str
+    mandatory: bool = True
+    params: dict = Field(default_factory=dict)
+    weight_override: float | None = None
+
+
+class TenderCreate(BaseModel):
+    title: str
+    category: str = "goods"
+    buyer_org: str = "CPCL"
+    estimated_value: float | None = None
+    template_id: str | None = None
+    requirements: list[RequirementIn] = Field(default_factory=list)
+
+
 @router.get("")
 def list_tenders(db: Session = Depends(get_db)) -> list[dict]:
     tenders = db.execute(select(Tender).order_by(Tender.ref_no)).scalars().all()
     return [serializers.tender_to_dict(db, t) for t in tenders]
+
+
+@router.post("", status_code=201)
+def create_tender(body: TenderCreate, db: Session = Depends(get_db)) -> dict:
+    year = datetime.now(timezone.utc).year
+    serial = 26104 + (db.execute(select(func.count(Tender.id))).scalar() or 0)
+    tender = Tender(
+        ref_no=f"GEM/{year}/B/{serial:07d}", title=body.title, buyer_org=body.buyer_org,
+        category=body.category, estimated_value=body.estimated_value,
+        template_id=body.template_id, status="open",
+    )
+    db.add(tender)
+    db.flush()
+    # sensible always-on checks if the caller sent none
+    reqs = body.requirements or [
+        RequirementIn(check_key="pan"), RequirementIn(check_key="gst", params={"require_returns": 6}),
+        RequirementIn(check_key="debarment"), RequirementIn(check_key="cartel"),
+    ]
+    for r in reqs:
+        db.add(TenderRequirement(tender_id=tender.id, check_key=r.check_key,
+                                 mandatory=r.mandatory, params=r.params,
+                                 weight_override=r.weight_override))
+    db.commit()
+    db.refresh(tender)
+    audit.record(db, action="tender.created", target=f"tender:{tender.id}",
+                 payload={"ref_no": tender.ref_no, "title": tender.title})
+    return serializers.tender_to_dict(db, tender, detail=True)
 
 
 @router.get("/{tender_id}")

@@ -82,8 +82,39 @@ class HeuristicLLM(LLMProvider):
 # --------------------------------------------------------------------------- #
 # Inline fallback: Fixture OCR (reads known synthetic fields from hints)
 # --------------------------------------------------------------------------- #
+import re as _re
+
+# Format-valid ID patterns for offline text extraction from real uploads.
+_ID_PATTERNS = {
+    "pan": _re.compile(r"\b[A-Z]{5}[0-9]{4}[A-Z]\b"),
+    "gstin": _re.compile(r"\b[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]\b"),
+    "udyam": _re.compile(r"\bUDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}\b"),
+    "cin": _re.compile(r"\b[LU][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}\b"),
+    "dpiit": _re.compile(r"\bDIPP[0-9]+\b"),
+    "bis": _re.compile(r"\b(?:CM/L-?[0-9]{6,8}|R-?[0-9]{10})\b"),
+}
+
+
+def _pdf_text(file_bytes: bytes) -> str:
+    """Extract embedded text from a PDF (guarded; empty on failure/non-PDF)."""
+    if not file_bytes or file_bytes[:5] != b"%PDF-":
+        return ""
+    try:
+        import fitz  # PyMuPDF
+
+        with fitz.open(stream=file_bytes, filetype="pdf") as doc:
+            return "\n".join(page.get_text() for page in doc)
+    except Exception:  # noqa: BLE001
+        return ""
+
+
 class FixtureOCR(OCRProvider):
-    """Returns the document's already-known fields (from seed) — offline safe."""
+    """Offline OCR fallback.
+
+    For seeded documents it echoes the known fields from `hints`. For real
+    uploads (no hint fields) it extracts embedded PDF text and regexes out
+    recognizable government IDs, so uploads surface genuine data with no key.
+    """
 
     name = "fixture"
     mode = "SIMULATED"
@@ -92,8 +123,22 @@ class FixtureOCR(OCRProvider):
         hints = hints or {}
         fields = dict(hints.get("fields") or hints.get("extracted") or {})
         text = hints.get("text", "")
+        # Strip private markers before deciding whether we already have fields.
+        real_fields = {k: v for k, v in fields.items() if not k.startswith("_")}
+
+        if not real_fields and file_bytes:
+            text = _pdf_text(file_bytes) or text
+            up = text.upper()
+            found: dict[str, Any] = {}
+            for key, pat in _ID_PATTERNS.items():
+                m = pat.search(up)
+                if m:
+                    found[key] = m.group(0)
+            if found:
+                fields = {**fields, **found}
+
         return OCRResult(
-            text=text, fields=fields, confidence=float(hints.get("confidence", 0.95)),
+            text=text, fields=fields, confidence=float(hints.get("confidence", 0.9)),
             provider=self.name, mode="SIMULATED",
         )
 
