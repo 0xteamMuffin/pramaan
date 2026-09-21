@@ -96,6 +96,12 @@ cd frontend && npm install && npm run dev   # http://localhost:3000
 - ✅ Frontend: Next.js 11 screens + ~35 components, GeM tokens, live API + demo fallback; `npm run build` passes.
 - ✅ Infra: docker-compose (api+web), `scripts/dev.sh`, `scripts/seed.sh`.
 
+### Phase 2 (production polish)
+- ✅ Live AI adapters wired via httpx (no new deps): Gemini (`gemini-flash-latest`, thinkingBudget=0) + Groq (`openai/gpt-oss-20b`) for reasoning; Gemini Vision for upload OCR. Guarded: empty `.env` still runs; models refreshed for 2026. Government checks stay simulated by design (synthetic IDs; preserves golden demo).
+- ✅ Officer authoring flows: `POST /tenders` (create), `POST /bidders` (create + attach), `POST /bidders/{id}/documents` (multipart upload -> live OCR + forensic verdict). FixtureOCR now extracts embedded PDF text + regexes IDs so uploads surface data with no key.
+- ✅ Full frontend redesign (impeccable skill, product+brand registers): distinctive landing page, attention-first dashboard (no KPI-grid), reworked verdict hero + all screens, flattened cards, removed eyebrows, copy rewrite (no em/en dashes), Create Tender + Add-Bidder/Upload flows. `npm run build` passes (16 routes); audited via Playwright.
+- ✅ PRODUCT.md + DESIGN.md added as design anchors.
+
 ### Known issues / next
 - `high_risk_count` on the tender LIST is derived from persisted runs (seed pre-runs all bids, so it's correct after seeding).
 - Provider live adapters (Sandbox.co.in) are structured but only exercised when keys are present; mocks cover 100% otherwise.

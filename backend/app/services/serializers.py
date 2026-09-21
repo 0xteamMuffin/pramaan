@@ -34,6 +34,14 @@ DIMENSION_NAMES = {
 
 _FORENSIC_VERDICT = {"clean": "PASS", "suspect": "WARN", "tampered": "FAIL", "unknown": "UNVERIFIABLE"}
 
+_ACRONYMS = {"oem", "maf", "gst", "pan", "bis", "isi", "crs", "epfo", "esic",
+             "dpiit", "nsic", "mca", "msme", "id", "din", "cin", "gstin"}
+
+
+def _pretty_doc_type(doc_type: str) -> str:
+    words = (doc_type or "").replace("_", " ").split()
+    return " ".join(w.upper() if w.lower() in _ACRONYMS else w.capitalize() for w in words)
+
 
 def _iso(dt: datetime | None) -> str | None:
     if dt is None:
@@ -156,7 +164,7 @@ def document_to_dict(doc: Document) -> dict:
             "incremental_updates": incr, "ela_note": f.get("method"),
             "copy_move_regions": 0,
         },
-        "thumbnail_label": doc.doc_type.replace("_", " ").title(),
+        "thumbnail_label": _pretty_doc_type(doc.doc_type),
     }
 
 
