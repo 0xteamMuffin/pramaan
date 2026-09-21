@@ -197,7 +197,7 @@ export function EntityGraph({ graph }: { graph: EntityGraphData }) {
         {/* details + legend */}
         <div className="space-y-3">
           <div className="rounded-input border border-border bg-surface p-3">
-            <p className="text-2xs font-semibold uppercase tracking-wide text-ink-500">Node types</p>
+            <p className="text-2xs font-semibold text-ink-500">Node types</p>
             <ul className="mt-2 grid grid-cols-2 gap-1.5">
               {Array.from(new Set(graph.nodes.map((n) => n.type))).map((type) => (
                 <li key={type} className="flex items-center gap-1.5 text-2xs text-ink-700">
@@ -209,7 +209,7 @@ export function EntityGraph({ graph }: { graph: EntityGraphData }) {
           </div>
 
           <div className="rounded-input border border-border bg-surface p-3">
-            <p className="text-2xs font-semibold uppercase tracking-wide text-ink-500">Details</p>
+            <p className="text-2xs font-semibold text-ink-500">Details</p>
             {selectedEdge !== null && graph.edges[selectedEdge] ? (
               <div className="mt-2 text-sm">
                 <p className="font-medium text-ink-900">
@@ -268,7 +268,7 @@ export function EntityGraph({ graph }: { graph: EntityGraphData }) {
         </summary>
         <div className="overflow-x-auto border-t border-border">
           <table className="w-full text-xs">
-            <thead className="bg-surface-1 text-left text-2xs uppercase tracking-wide text-ink-500">
+            <thead className="bg-surface-1 text-left text-xs font-semibold text-ink-500">
               <tr>
                 <th className="px-3 py-2">Source</th>
                 <th className="px-3 py-2">Relation</th>

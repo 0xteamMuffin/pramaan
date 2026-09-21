@@ -6,7 +6,7 @@ interface SparklineProps {
   className?: string;
 }
 
-/** Minimal SVG sparkline — low chart-ink per data-viz rules. */
+/** Minimal SVG sparkline · low chart-ink per data-viz rules. */
 export function Sparkline({
   values,
   width = 96,

@@ -23,7 +23,7 @@ export default function TenderGraphPage({ params }: { params: Promise<{ id: stri
           { label: tender.data?.ref_no ?? id, href: `/tenders/${id}` },
           { label: "Entity graph" },
         ]}
-        title="Entity graph — cartel / related-party view"
+        title="Entity graph · cartel / related-party view"
         description="Bidders linked by shared PAN, DIN, address, bank or submission IP. Flagged clusters indicate possible related-party or cartel behaviour."
         mode={graph.mode}
       />

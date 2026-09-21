@@ -9,7 +9,7 @@ import { EmptyState } from "@/components/ui/States";
 import { ModeBadge } from "@/components/ui/ModeBadge";
 import { SkeletonRows } from "@/components/ui/Skeleton";
 import { searchDebarment } from "@/lib/api";
-import { formatDate, formatPercent } from "@/lib/format";
+import { cleanText, formatDate, formatPercent } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { DataMode } from "@/lib/api";
 import type { DebarmentRecord } from "@/lib/types";
@@ -61,7 +61,7 @@ export default function DebarmentPage() {
             </Button>
           </form>
           <div className="mt-4 border-t border-border pt-3">
-            <p className="text-2xs font-semibold uppercase tracking-wide text-ink-500">Try an example</p>
+            <p className="text-2xs font-semibold text-ink-500">Try an example</p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               <button
                 className="rounded-full border border-border bg-surface-1 px-2.5 py-1 text-2xs text-ink-700 hover:bg-surface-2"
@@ -94,7 +94,7 @@ export default function DebarmentPage() {
             <EmptyState
               icon="search"
               title="Search the debarment snapshots"
-              description="Enter a name, PAN, CIN or DIN. Matches are fuzzy — a partial name will still surface candidates."
+              description="Enter a name, PAN, CIN or DIN. Matches are fuzzy · a partial name will still surface candidates."
             />
           ) : results.length === 0 ? (
             <Card>
@@ -109,10 +109,10 @@ export default function DebarmentPage() {
           ) : (
             <div className="space-y-3">
               <p className="text-sm text-ink-500">
-                {results.length} match(es) found — review grounds and period before acting.
+                {results.length} match(es) found · review grounds and period before acting.
               </p>
               {results.map((r) => (
-                <Card key={r.id} className="border-l-4 border-l-danger">
+                <Card key={r.id}>
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="flex items-start gap-2.5">
                       <span className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-danger-bg text-danger">
@@ -141,7 +141,7 @@ export default function DebarmentPage() {
                     )}
                   </div>
                   <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                    <Info label="Grounds" value={r.grounds} />
+                    <Info label="Grounds" value={cleanText(r.grounds)} />
                     <Info label="Period" value={`${formatDate(r.from_date)} → ${formatDate(r.to_date)}`} />
                     {r.pan && <Info label="PAN" value={r.pan} />}
                     {r.din && <Info label="DIN" value={r.din} />}
@@ -170,7 +170,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-1 block text-2xs font-semibold uppercase tracking-wide text-ink-500">
+      <label className="mb-1 block text-2xs font-semibold text-ink-500">
         {label}
       </label>
       <input
@@ -186,7 +186,7 @@ function Field({
 function Info({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="rounded-input bg-surface-1 px-3 py-2">
-      <p className="text-2xs font-semibold uppercase tracking-wide text-ink-500">{label}</p>
+      <p className="text-2xs font-semibold text-ink-500">{label}</p>
       <p className="mt-0.5 text-sm text-ink-900">{value}</p>
     </div>
   );

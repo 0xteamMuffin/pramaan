@@ -22,7 +22,7 @@ import { RRSTANCE } from "@/lib/stance";
 
 export default function BidderVerdictPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const bidId = bidIdForBidder(id) ?? `bid-${id}`;
+  const bidId = bidIdForBidder(id) ?? id;
   const { data, loading, error, mode, refetch } = useResource(() => getBidVerdict(bidId), [bidId]);
 
   if (loading) {
@@ -90,11 +90,8 @@ export default function BidderVerdictPage({ params }: { params: Promise<{ id: st
             <ScoreGauge score={score.score} band={score.band} size={188} />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-2xs font-semibold uppercase tracking-wide text-ink-500">
-              Compliance verdict
-            </p>
-            <p className="mt-1 text-lg font-semibold text-ink-900">
-              For the officer&apos;s consideration:{" "}
+            <p className="text-lg font-semibold leading-snug text-ink-900">
+              For the officer&apos;s consideration, this bid{" "}
               <span
                 className={
                   recommendation.stance === "RECOMMEND_QUALIFY"
@@ -108,14 +105,13 @@ export default function BidderVerdictPage({ params }: { params: Promise<{ id: st
               </span>
               .
             </p>
-            <p className="mt-1 text-sm text-ink-500">
-              {run.checks.length} checks evaluated · run completed in{" "}
-              <span className="tnum">{run.duration_seconds}s</span> · {score.vetoes.length} veto(es).
+            <p className="mt-1 text-sm text-ink-700">
+              <span className="tnum">{run.checks.length}</span> checks evaluated, completed in{" "}
+              <span className="tnum">{run.duration_seconds}s</span>, with{" "}
+              <span className="tnum">{score.vetoes.length}</span> hard veto(es).
             </p>
             <div className="mt-3">
-              <p className="mb-1.5 text-2xs font-semibold uppercase tracking-wide text-ink-500">
-                Top reasons
-              </p>
+              <p className="mb-1.5 text-xs font-semibold text-ink-700">Top reasons, vetoes first</p>
               <TopReasons reasons={score.reasons_top} />
             </div>
           </div>
@@ -219,7 +215,7 @@ export default function BidderVerdictPage({ params }: { params: Promise<{ id: st
 function IdRow({ label, value, valid }: { label: string; value: string; valid?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <dt className="text-2xs font-semibold uppercase tracking-wide text-ink-500">{label}</dt>
+      <dt className="text-2xs font-semibold text-ink-500">{label}</dt>
       <dd className="flex items-center gap-1.5">
         <span className="tnum text-sm text-ink-900">{value}</span>
         {valid === false && (

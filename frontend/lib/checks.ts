@@ -139,6 +139,14 @@ export const CHECK_META: Record<CheckKey, CheckMeta> = {
     vetoCapable: true,
     blurb: "Issuer-signed pulls preferred; uploaded docs scanned for tampering.",
   },
+  doc_integrity: {
+    key: "doc_integrity",
+    label: "Document forensics",
+    short: "Forensics",
+    dimension: "document_integrity",
+    vetoCapable: true,
+    blurb: "Uploaded documents scanned for tampering, metadata edits and copy-move.",
+  },
   experience: {
     key: "experience",
     label: "Past experience",
@@ -166,6 +174,7 @@ export const CHECK_ORDER: CheckKey[] = [
   "epfo",
   "esic",
   "digilocker",
+  "doc_integrity",
   "experience",
 ];
 
@@ -221,9 +230,14 @@ export const MODE_LABEL: Record<ProviderMode, string> = {
 };
 
 export function checkLabel(key: CheckKey): string {
-  return CHECK_META[key]?.label ?? key;
+  return CHECK_META[key]?.label ?? prettyKey(key);
 }
 
 export function checkShort(key: CheckKey): string {
-  return CHECK_META[key]?.short ?? key;
+  return CHECK_META[key]?.short ?? prettyKey(key);
+}
+
+/** Turn an unknown check key into a readable label (e.g. doc_integrity -> Doc Integrity). */
+export function prettyKey(key: string): string {
+  return key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }

@@ -31,7 +31,7 @@ export function DataModeBanner({ mode, className }: DataModeBannerProps) {
         "inline-flex items-center gap-1.5 rounded-full border border-warning/30 bg-warning-bg px-2.5 py-1 text-2xs font-medium text-warning",
         className,
       )}
-      title="The backend API was unreachable — showing seeded demo data so the UI stays fully functional."
+      title="The backend API was unreachable · showing seeded demo data so the UI stays fully functional."
     >
       <CloudOff aria-hidden className="h-3 w-3" /> Demo data (offline fallback)
     </span>

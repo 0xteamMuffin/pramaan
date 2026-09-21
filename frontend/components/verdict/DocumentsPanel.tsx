@@ -5,7 +5,7 @@ import { FileCheck2, FileWarning, FileX2, ShieldCheck } from "lucide-react";
 import { StatusChip } from "@/components/ui/StatusChip";
 import { SidePanel } from "@/components/ui/SidePanel";
 import { ModeBadge } from "@/components/ui/ModeBadge";
-import { formatPercent } from "@/lib/format";
+import { cleanText, formatPercent } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { DocumentRecord, Verdict } from "@/lib/types";
 
@@ -89,7 +89,7 @@ function DocDetail({ doc }: { doc: DocumentRecord }) {
         <StatusChip verdict={doc.forensics.verdict} />
         <ModeBadge mode={doc.source === "digilocker" ? "LIVE" : "SIMULATED"} />
       </div>
-      <p className="text-sm text-ink-700">{doc.forensics.summary}</p>
+      <p className="text-sm text-ink-700">{cleanText(doc.forensics.summary)}</p>
 
       <dl className="grid grid-cols-2 gap-3 rounded-input bg-surface-1 p-3 text-sm">
         <Detail label="Document type" value={doc.doc_type.replace(/_/g, " ")} />
@@ -109,7 +109,7 @@ function DocDetail({ doc }: { doc: DocumentRecord }) {
           <h3 className="mb-2 text-sm font-semibold text-ink-900">Metadata diff</h3>
           <div className="overflow-hidden rounded-input border border-border">
             <table className="w-full text-xs">
-              <thead className="bg-surface-1 text-left text-2xs uppercase tracking-wide text-ink-500">
+              <thead className="bg-surface-1 text-left text-xs font-semibold text-ink-500">
                 <tr>
                   <th className="px-2.5 py-2">Field</th>
                   <th className="px-2.5 py-2">Before (signed)</th>
@@ -149,7 +149,7 @@ function DocDetail({ doc }: { doc: DocumentRecord }) {
 function Detail({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <dt className="text-2xs font-semibold uppercase tracking-wide text-ink-500">{label}</dt>
+      <dt className="text-2xs font-semibold text-ink-500">{label}</dt>
       <dd className="mt-0.5 font-medium capitalize text-ink-900">{value}</dd>
     </div>
   );

@@ -9,12 +9,22 @@ function toneFor(reason: string) {
   return { cls: "border-success/30 bg-success-bg text-success", Icon: ShieldCheck };
 }
 
-/** Top reasons chips — vetoes first (ordering handled by the scorer). */
-export function TopReasons({ reasons }: { reasons: string[] }) {
-  if (reasons.length === 0) return null;
+function asText(reason: unknown): string {
+  if (typeof reason === "string") return reason;
+  if (reason && typeof reason === "object") {
+    const r = reason as { check_key?: string; verdict?: string; summary?: string };
+    return [r.verdict, r.check_key, r.summary].filter(Boolean).join(" ");
+  }
+  return String(reason ?? "");
+}
+
+/** Top reasons chips, vetoes first (ordering handled by the scorer). */
+export function TopReasons({ reasons }: { reasons: unknown[] }) {
+  if (!reasons || reasons.length === 0) return null;
   return (
     <div className="flex flex-wrap gap-2">
-      {reasons.map((reason, i) => {
+      {reasons.map((raw, i) => {
+        const reason = asText(raw);
         const { cls, Icon } = toneFor(reason);
         return (
           <span

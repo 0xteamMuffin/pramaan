@@ -54,6 +54,7 @@ export type CheckKey =
   | "startup"
   | "oem"
   | "digilocker"
+  | "doc_integrity"
   | "debarment"
   | "turnover"
   | "name_reconcile"
@@ -216,10 +217,15 @@ export interface ComplianceScore {
 }
 
 // ---- Recommendation -----------------------------------------------------------
+/** A backend evidence reference may be a plain id or a structured finding. */
+export type EvidenceRef =
+  | string
+  | { check_key?: string; verdict?: Verdict | string; summary?: string };
+
 export interface Recommendation {
   stance: RecommendationStance;
   rationale: string;
-  evidence_refs: string[];
+  evidence_refs: EvidenceRef[];
   model_meta: { provider: string; model: string; mode: ProviderMode };
 }
 
@@ -415,6 +421,30 @@ export interface DashboardSummary {
   time_savings: TimeSavings;
   recent_runs: RecentRun[];
   alerts: AlertItem[];
+}
+
+// ---- Create payloads (wizards / upload flows) ---------------------------------
+export interface TenderCreateInput {
+  title: string;
+  category: "goods" | "services" | "works";
+  buyer_org: string;
+  estimated_value: number;
+  requirements: { check_key: CheckKey; mandatory: boolean; params: Record<string, unknown> }[];
+}
+
+export interface BidderCreateInput {
+  legal_name: string;
+  trade_name?: string;
+  constitution: string;
+  primary_pan: string;
+  identifiers: { kind: IdentifierKind; value: string }[];
+  tender_id: string;
+  quoted_value: number;
+}
+
+/** POST /bidders returns the new bidder plus the bid_id created for the tender. */
+export interface BidderCreated extends Bidder {
+  bid_id: string;
 }
 
 // ---- Generic list wrapper -----------------------------------------------------

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/cn";
 
 /**
- * Neutral PRAMAAN wordmark — deliberately NO Ashoka State Emblem
+ * Neutral PRAMAAN wordmark · deliberately NO Ashoka State Emblem
  * (State Emblem of India Act, 2005). A simple geometric shield glyph +
  * navy/saffron wordmark conveys "official, but not impersonating GoI".
  */
@@ -28,9 +28,8 @@ export function Wordmark({
         </svg>
       </span>
       <div className="leading-tight">
-        <div className={cn("flex items-baseline gap-1 font-bold tracking-tight", textColor)}>
+        <div className={cn("font-bold tracking-tight", textColor)}>
           <span className="text-lg">PRAMAAN</span>
-          <span className="text-secondary text-lg">·</span>
         </div>
         {showTagline && (
           <div className={cn("text-2xs font-medium", subColor)}>

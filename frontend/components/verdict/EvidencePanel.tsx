@@ -2,7 +2,7 @@ import { FlaskConical, GitCompareArrows, ScanSearch } from "lucide-react";
 import { StatusChip } from "@/components/ui/StatusChip";
 import { ProvenanceStamp } from "@/components/ui/ProvenanceStamp";
 import { checkLabel } from "@/lib/checks";
-import { formatPercent } from "@/lib/format";
+import { cleanText, formatPercent } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { CheckResult, Evidence } from "@/lib/types";
 
@@ -17,7 +17,7 @@ export function EvidencePanel({ check }: { check: CheckResult }) {
           <StatusChip verdict={check.verdict} isVeto={check.is_veto} />
           <span className="text-2xs text-ink-500">Confidence {formatPercent(check.confidence)}</span>
         </div>
-        <p className="mt-2 text-sm text-ink-700">{check.summary}</p>
+        <p className="mt-2 text-sm text-ink-700">{cleanText(check.summary)}</p>
         <ProvenanceStamp
           className="mt-2"
           source={check.source}
@@ -36,7 +36,7 @@ export function EvidencePanel({ check }: { check: CheckResult }) {
           <div className="overflow-x-auto rounded-input border border-border">
             <table className="w-full text-xs">
               <thead className="bg-surface-1">
-                <tr className="text-left text-2xs uppercase tracking-wide text-ink-500">
+                <tr className="text-left text-xs font-semibold text-ink-500">
                   <th className="px-2.5 py-2">Field</th>
                   <th className="px-2.5 py-2">Declared</th>
                   <th className="px-2.5 py-2">PAN</th>
@@ -50,13 +50,13 @@ export function EvidencePanel({ check }: { check: CheckResult }) {
                 {check.comparisons.map((c) => (
                   <tr key={c.field} className="border-t border-border">
                     <td className="px-2.5 py-2 font-medium text-ink-900">{c.field}</td>
-                    <td className="px-2.5 py-2 text-ink-700">{c.declared || "—"}</td>
-                    <td className="px-2.5 py-2 text-ink-700">{c.pan || "—"}</td>
+                    <td className="px-2.5 py-2 text-ink-700">{c.declared || "-"}</td>
+                    <td className="px-2.5 py-2 text-ink-700">{c.pan || "-"}</td>
                     <td className={cn("px-2.5 py-2", c.match_score < 0.5 ? "font-semibold text-danger" : "text-ink-700")}>
-                      {c.gst || "—"}
+                      {c.gst || "-"}
                     </td>
-                    <td className="px-2.5 py-2 text-ink-700">{c.udyam || "—"}</td>
-                    <td className="px-2.5 py-2 text-ink-700">{c.mca || "—"}</td>
+                    <td className="px-2.5 py-2 text-ink-700">{c.udyam || "-"}</td>
+                    <td className="px-2.5 py-2 text-ink-700">{c.mca || "-"}</td>
                     <td className="px-2.5 py-2 text-right">
                       <span
                         className={cn(
@@ -111,7 +111,7 @@ export function EvidencePanel({ check }: { check: CheckResult }) {
 
       <p className="rounded-input bg-surface-1 px-3 py-2 text-2xs text-ink-500">
         Check: <span className="font-medium text-ink-700">{checkLabel(check.key)}</span>. All findings
-        are converted to structured evidence before scoring — never an opaque number.
+        are converted to structured evidence before scoring · never an opaque number.
       </p>
     </div>
   );

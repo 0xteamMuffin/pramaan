@@ -5,12 +5,17 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   padded?: boolean;
 }
 
+/**
+ * Surface primitive. A single hairline border defines the edge · never a border
+ * plus a soft shadow (no "ghost cards"). Cards are used only where a container
+ * is the right affordance and are never nested.
+ */
 export function Card({ className, padded = true, as = "div", children, ...rest }: CardProps) {
   const Comp = as;
   return (
     <Comp
       className={cn(
-        "rounded-card border border-border bg-surface shadow-card",
+        "rounded-card border border-border bg-surface",
         padded && "p-5",
         className,
       )}

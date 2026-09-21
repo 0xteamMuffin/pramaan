@@ -63,31 +63,31 @@ const MONTHS = [
 ];
 
 export function formatDate(iso: string | undefined | null): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "-";
   return `${d.getDate().toString().padStart(2, "0")} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 export function formatDateTime(iso: string | undefined | null): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "-";
   const hh = d.getHours().toString().padStart(2, "0");
   const mm = d.getMinutes().toString().padStart(2, "0");
   return `${formatDate(iso)}, ${hh}:${mm}`;
 }
 
-/** "As on 19 Sep 2026, 10:30" — provenance language from the design system. */
+/** "As on 19 Sep 2026, 10:30" · provenance language from the design system. */
 export function asOn(iso: string | undefined | null): string {
-  if (!iso) return "as on —";
+  if (!iso) return "as on -";
   return `as on ${formatDateTime(iso)}`;
 }
 
 export function relativeTime(iso: string | undefined | null): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return "—";
+  if (Number.isNaN(then)) return "-";
   const diff = Date.now() - then;
   const mins = Math.round(diff / 60000);
   if (mins < 1) return "just now";
@@ -100,15 +100,26 @@ export function relativeTime(iso: string | undefined | null): string {
 }
 
 export function formatDuration(seconds: number | undefined): string {
-  if (!seconds && seconds !== 0) return "—";
+  if (!seconds && seconds !== 0) return "-";
   if (seconds < 60) return `${seconds.toFixed(0)} sec`;
   const m = Math.floor(seconds / 60);
   const s = Math.round(seconds % 60);
   return `${m}m ${s}s`;
 }
 
+/**
+ * Normalise em/en dashes coming from backend-generated strings into the app's
+ * neutral separators, so no long dashes ever render in the UI.
+ */
+export function cleanText(s: string | undefined | null): string {
+  if (!s) return "";
+  return s
+    .replace(/\s[\u2014\u2013]\s/g, " \u00B7 ")
+    .replace(/[\u2014\u2013]/g, "-");
+}
+
 export function truncateHash(hash: string, len = 10): string {
-  if (!hash) return "—";
+  if (!hash) return "-";
   if (hash.length <= len * 2) return hash;
   return `${hash.slice(0, len)}…${hash.slice(-6)}`;
 }

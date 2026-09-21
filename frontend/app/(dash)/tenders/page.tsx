@@ -57,17 +57,19 @@ export default function TendersPage() {
     <div>
       <PageHeader
         title="Tenders"
-        description="GeM tenders under evaluation. Open a tender to compare bidders side-by-side."
+        description="GeM tenders under evaluation. Open one to compare bidders side by side."
         mode={mode}
         actions={
-          <Button variant="accent" size="sm">
-            <FilePlus2 className="h-4 w-4" /> New tender
-          </Button>
+          <Link href="/tenders/new">
+            <Button variant="accent" size="sm">
+              <FilePlus2 className="h-4 w-4" /> New tender
+            </Button>
+          </Link>
         }
       />
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <span className="flex items-center gap-1.5 text-xs font-medium text-ink-500">
+        <span className="flex items-center gap-1.5 text-xs font-medium text-ink-700">
           <Filter className="h-3.5 w-3.5" /> Status
         </span>
         {statuses.map((s) => (
@@ -111,13 +113,13 @@ export default function TendersPage() {
                     <SortHeader label="Ref / Title" active={sortKey === "ref_no"} direction={sortDir} onSort={() => toggleSort("ref_no")} />
                   </th>
                   <th className="px-4 py-3 text-left">
-                    <span className="text-2xs font-semibold uppercase tracking-wide text-ink-500">Buyer</span>
+                    <span className="text-2xs font-semibold text-ink-500">Buyer</span>
                   </th>
                   <th className="px-4 py-3 text-right">
                     <SortHeader label="Value" active={sortKey === "estimated_value"} direction={sortDir} onSort={() => toggleSort("estimated_value")} align="right" />
                   </th>
                   <th className="px-4 py-3 text-center">
-                    <span className="text-2xs font-semibold uppercase tracking-wide text-ink-500">Status</span>
+                    <span className="text-2xs font-semibold text-ink-500">Status</span>
                   </th>
                   <th className="px-4 py-3 text-right">
                     <SortHeader label="Bidders" active={sortKey === "bidder_count"} direction={sortDir} onSort={() => toggleSort("bidder_count")} align="right" />

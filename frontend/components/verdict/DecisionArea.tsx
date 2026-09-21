@@ -46,7 +46,7 @@ export function DecisionArea({
       <div>
         <div className="mb-2 flex items-center gap-2">
           <Gavel aria-hidden className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold text-ink-900">Officer decision — recorded</h3>
+          <h3 className="text-sm font-semibold text-ink-900">Officer decision · recorded</h3>
         </div>
         <div
           className={cn(
@@ -108,7 +108,7 @@ export function DecisionArea({
           );
         })}
       </div>
-      <label htmlFor="decision-note" className="mt-3 block text-2xs font-semibold uppercase tracking-wide text-ink-500">
+      <label htmlFor="decision-note" className="mt-3 block text-2xs font-semibold text-ink-500">
         Reasoning (written to audit)
       </label>
       <textarea
@@ -116,7 +116,7 @@ export function DecisionArea({
         value={note}
         onChange={(e) => setNote(e.target.value)}
         rows={3}
-        placeholder="Record your reasoning — this is stored immutably in the audit trail."
+        placeholder="Record your reasoning · this is stored immutably in the audit trail."
         className="mt-1 w-full rounded-input border border-border bg-surface px-3 py-2 text-sm text-ink-900 focus:border-primary focus:outline-none"
       />
       <div className="mt-2 flex items-center gap-2">

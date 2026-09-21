@@ -48,14 +48,14 @@ export const DEMO_USERS: User[] = [
     name: "R. Meenakshi",
     email: "officer@pramaan.gov.in",
     role: "OFFICER",
-    org: "CPCL — Procurement",
+    org: "CPCL · Procurement",
   },
   {
     id: "u-analyst",
     name: "A. Verma",
     email: "analyst@pramaan.gov.in",
     role: "ANALYST",
-    org: "CPCL — Procurement",
+    org: "CPCL · Procurement",
   },
   {
     id: "u-auditor",
@@ -88,7 +88,7 @@ export const DEMO_TENDERS: Tender[] = [
     id: "t1",
     ref_no: "GEM/2026/B/4412201",
     title: "Supply of Industrial Centrifugal Pumps",
-    buyer_org: "CPCL — Chennai Petroleum Corporation Ltd",
+    buyer_org: "CPCL · Chennai Petroleum Corporation Ltd",
     category: "goods",
     estimated_value: 32_000_000,
     status: "evaluating",
@@ -117,7 +117,7 @@ export const DEMO_TENDERS: Tender[] = [
     id: "t2",
     ref_no: "GEM/2026/S/4419887",
     title: "Facility Management Services (2-yr)",
-    buyer_org: "CPCL — Administration",
+    buyer_org: "CPCL · Administration",
     category: "services",
     estimated_value: 11_000_000,
     status: "evaluating",
@@ -144,7 +144,7 @@ export const DEMO_TENDERS: Tender[] = [
     id: "t3",
     ref_no: "GEM/2026/B/4423110",
     title: "Supply of IT Hardware (Workstations)",
-    buyer_org: "CPCL — IT Services",
+    buyer_org: "CPCL · IT Services",
     category: "goods",
     estimated_value: 6_000_000,
     status: "evaluating",
@@ -375,7 +375,7 @@ const okGst = (gstin: string): CheckResult =>
 // Per-bidder check sets (planted frauds)
 // ---------------------------------------------------------------------------
 const CHECKS: Record<string, CheckResult[]> = {
-  // B1 — clean baseline (LOW)
+  // B1 · clean baseline (LOW)
   b1: [
     mkCheck("debarment", { verdict: "PASS", summary: "No match in World Bank / CPPP snapshots.", source: "CPPP snapshot", method: "snapshot", mode: "SNAPSHOT" }),
     okPan("Private Limited"),
@@ -392,7 +392,7 @@ const CHECKS: Record<string, CheckResult[]> = {
     mkCheck("cartel", { verdict: "PASS", summary: "No shared director/address/bank/IP with co-bidders.", source: "Entity graph", method: "graph", mode: "SIMULATED" }),
   ],
 
-  // B2 — Micro claim inconsistent + name mismatch (MEDIUM)
+  // B2 · Micro claim inconsistent + name mismatch (MEDIUM)
   b2: [
     mkCheck("debarment", { verdict: "PASS", summary: "No debarment match.", source: "CPPP snapshot", method: "snapshot", mode: "SNAPSHOT" }),
     okPan("Proprietorship"),
@@ -421,7 +421,7 @@ const CHECKS: Record<string, CheckResult[]> = {
     mkCheck("cartel", { verdict: "PASS", summary: "No related-party links.", source: "Entity graph", method: "graph", mode: "SIMULATED" }),
   ],
 
-  // B3 — Forged/expired OEM MAF + BIS belongs to another brand (HIGH)
+  // B3 · Forged/expired OEM MAF + BIS belongs to another brand (HIGH)
   b3: [
     mkCheck("debarment", { verdict: "PASS", summary: "Firm clean; note: one director appears in a separate debarment record (see MCA).", source: "CPPP snapshot", method: "snapshot", mode: "SNAPSHOT" }),
     okPan("LLP"),
@@ -432,7 +432,7 @@ const CHECKS: Record<string, CheckResult[]> = {
     mkCheck("mii", { verdict: "WARN", summary: "Class-I claimed on partly imported assembly; LC evidence weak.", source: "MII declaration", method: "rule", mode: "SIMULATED" }),
     mkCheck("oem", {
       verdict: "FAIL", is_veto: true,
-      summary: "OEM MAF is FORGED — signature block edited after signing (PDF incremental update) and validity expired 2025-03-31.",
+      summary: "OEM MAF is FORGED · signature block edited after signing (PDF incremental update) and validity expired 2025-03-31.",
       source: "MAF (uploaded)", method: "forensic+ocr", mode: "SIMULATED", confidence: 0.93,
       evidence: [
         ev("forensic", "PDF incremental update after signature (tamper)", "Document forensics", "incremental-update", { updates: 2, after_signature: true }),
@@ -448,7 +448,7 @@ const CHECKS: Record<string, CheckResult[]> = {
     }),
     mkCheck("digilocker", {
       verdict: "FAIL", is_veto: true,
-      summary: "Uploaded MAF fails forensic integrity — tamper detected.",
+      summary: "Uploaded MAF fails forensic integrity · tamper detected.",
       source: "Document forensics", method: "metadata+ELA+copy-move", mode: "SIMULATED",
       evidence: [ev("forensic", "Copy-move seal detected; metadata author mismatch", "Forensics", "copy-move", { regions: 1, author_before: "HydroMax Ltd", author_after: "unknown" })],
     }),
@@ -456,12 +456,12 @@ const CHECKS: Record<string, CheckResult[]> = {
     mkCheck("cartel", { verdict: "PASS", summary: "No cartel links in this tender.", source: "Entity graph", method: "graph", mode: "SIMULATED" }),
   ],
 
-  // B4 — PAN on GST ≠ PAN on Udyam + GST cancelled (HIGH)
+  // B4 · PAN on GST ≠ PAN on Udyam + GST cancelled (HIGH)
   b4: [
     mkCheck("debarment", { verdict: "PASS", summary: "No debarment match.", source: "CPPP snapshot", method: "snapshot", mode: "SNAPSHOT" }),
     mkCheck("pan", {
       verdict: "FAIL", is_veto: true,
-      summary: "Identity fraud — PAN embedded in GSTIN (AAGFZ7788Q) ≠ PAN on Udyam/declared (AAGFD3456P).",
+      summary: "Identity fraud · PAN embedded in GSTIN (AAGFZ7788Q) ≠ PAN on Udyam/declared (AAGFD3456P).",
       source: "Cross-portal", method: "join-key", mode: "SIMULATED", confidence: 0.97,
       comparisons: [
         { field: "PAN", declared: "AAGFD3456P", pan: "AAGFD3456P", gst: "AAGFZ7788Q", udyam: "AAGFD3456P", match_score: 0.0 },
@@ -469,55 +469,55 @@ const CHECKS: Record<string, CheckResult[]> = {
       evidence: [ev("portal_response", "GSTIN PAN-segment ≠ declared PAN", "GSTN + Udyam", "join-key", { gst_pan: "AAGFZ7788Q", declared_pan: "AAGFD3456P" })],
     }),
     mkCheck("name_reconcile", { verdict: "FAIL", summary: "Entity behind GSTIN differs from declared entity (PAN mismatch).", source: "Cross-portal", method: "join-key", mode: "SIMULATED" }),
-    mkCheck("mca", { verdict: "NOT_APPLICABLE", summary: "Partnership — no CIN.", source: "MCA21", method: "n/a", mode: "SIMULATED" }),
+    mkCheck("mca", { verdict: "NOT_APPLICABLE", summary: "Partnership · no CIN.", source: "MCA21", method: "n/a", mode: "SIMULATED" }),
     mkCheck("gst", {
       verdict: "FAIL", is_veto: true,
       summary: "GSTIN status CANCELLED (suo-moto) w.e.f. 2026-06-30; 4 returns unfiled.",
       source: "GSTN (sandbox)", method: "api-live", mode: "LIVE", confidence: 0.99,
       evidence: [ev("portal_response", "GSTIN status: Cancelled", "GSTN", "api-live", { status: "Cancelled", cancelled_on: "2026-06-30", returns_pending: 4 })],
     }),
-    mkCheck("turnover", { verdict: "UNVERIFIABLE", summary: "Cannot verify — GST cancelled, CA certificate not issuer-signed.", source: "GSTR", method: "api-live", mode: "LIVE" }),
-    mkCheck("udyam", { verdict: "WARN", summary: "Udyam present but tied to a different PAN — needs manual reconciliation.", source: "Udyam portal", method: "api-live", mode: "LIVE" }),
-    mkCheck("mii", { verdict: "NOT_APPLICABLE", summary: "Not evaluated pending identity resolution.", source: "—", method: "n/a", mode: "SIMULATED" }),
+    mkCheck("turnover", { verdict: "UNVERIFIABLE", summary: "Cannot verify · GST cancelled, CA certificate not issuer-signed.", source: "GSTR", method: "api-live", mode: "LIVE" }),
+    mkCheck("udyam", { verdict: "WARN", summary: "Udyam present but tied to a different PAN · needs manual reconciliation.", source: "Udyam portal", method: "api-live", mode: "LIVE" }),
+    mkCheck("mii", { verdict: "NOT_APPLICABLE", summary: "Not evaluated pending identity resolution.", source: "-", method: "n/a", mode: "SIMULATED" }),
     mkCheck("bis", { verdict: "UNVERIFIABLE", summary: "BIS portal timeout; retry recommended.", source: "BIS portal", method: "api-live", mode: "LIVE" }),
     mkCheck("digilocker", { verdict: "WARN", summary: "Documents uploaded (not DigiLocker); GST cert PDF metadata inconsistent.", source: "Forensics", method: "metadata", mode: "SIMULATED" }),
-    mkCheck("experience", { verdict: "UNVERIFIABLE", summary: "Records unverifiable pending identity.", source: "—", method: "n/a", mode: "SIMULATED" }),
+    mkCheck("experience", { verdict: "UNVERIFIABLE", summary: "Records unverifiable pending identity.", source: "-", method: "n/a", mode: "SIMULATED" }),
     mkCheck("cartel", { verdict: "PASS", summary: "No related-party links found.", source: "Entity graph", method: "graph", mode: "SIMULATED" }),
   ],
 
-  // B5 — shell / recent CIN vs claimed vintage; no EPFO/ESIC (HIGH)
+  // B5 · shell / recent CIN vs claimed vintage; no EPFO/ESIC (HIGH)
   b5: [
     mkCheck("debarment", { verdict: "PASS", summary: "No debarment match.", source: "CPPP snapshot", method: "snapshot", mode: "SNAPSHOT" }),
     okPan("Private Limited"),
     mkCheck("name_reconcile", { verdict: "PASS", summary: "Name consistent across portals.", source: "Cross-portal", method: "compute", mode: "SIMULATED" }),
     mkCheck("mca", {
       verdict: "WARN",
-      summary: "Shell signal — CIN incorporated 2025 but bid claims 5-yr experience.",
+      summary: "Shell signal · CIN incorporated 2025 but bid claims 5-yr experience.",
       source: "MCA21", method: "api-live", mode: "LIVE",
       evidence: [ev("portal_response", "Incorporation year 2025 vs claimed 5-yr experience", "MCA21", "api-live", { incorporated: 2025, claimed_experience_years: 5 })],
     }),
     okGst("33AADCE7788R1Z1"),
     mkCheck("turnover", { verdict: "WARN", summary: "Only 1 year of filings available (new entity).", source: "GSTR", method: "rule", mode: "SIMULATED" }),
-    mkCheck("udyam", { verdict: "NOT_APPLICABLE", summary: "Not claimed.", source: "—", method: "n/a", mode: "SIMULATED" }),
+    mkCheck("udyam", { verdict: "NOT_APPLICABLE", summary: "Not claimed.", source: "-", method: "n/a", mode: "SIMULATED" }),
     mkCheck("epfo", {
       verdict: "FAIL",
-      summary: "No EPFO establishment code found — required for a services contract of this size.",
+      summary: "No EPFO establishment code found · required for a services contract of this size.",
       source: "EPFO (mock)", method: "api-mock", mode: "SIMULATED",
       evidence: [ev("portal_response", "No active EPFO code", "EPFO", "api-mock", { found: false })],
     }),
-    mkCheck("esic", { verdict: "FAIL", summary: "No ESIC registration — mandatory for this tender.", source: "ESIC (mock)", method: "api-mock", mode: "SIMULATED" }),
+    mkCheck("esic", { verdict: "FAIL", summary: "No ESIC registration · mandatory for this tender.", source: "ESIC (mock)", method: "api-mock", mode: "SIMULATED" }),
     mkCheck("gst", { verdict: "PASS", summary: "GSTIN active (registered 2025).", source: "GSTN (sandbox)", method: "api-live", mode: "LIVE" }),
     mkCheck("digilocker", { verdict: "PASS", summary: "Documents forensically clean.", source: "Forensics", method: "metadata+ELA", mode: "SIMULATED" }),
     mkCheck("experience", {
       verdict: "FAIL",
-      summary: "Claimed 5 yrs experience not supported — entity < 1 yr old.",
+      summary: "Claimed 5 yrs experience not supported · entity < 1 yr old.",
       source: "MCA + POs", method: "rule", mode: "SIMULATED",
       evidence: [ev("rule", "Experience claim exceeds entity age", "Rule engine", "rule", { entity_age_years: 0.7, claimed: 5 })],
     }),
     mkCheck("cartel", { verdict: "PASS", summary: "No related-party links.", source: "Entity graph", method: "graph", mode: "SIMULATED" }),
   ],
 
-  // B6 — cartel (HIGH)
+  // B6 · cartel (HIGH)
   b6: [
     mkCheck("debarment", { verdict: "PASS", summary: "No debarment match.", source: "CPPP snapshot", method: "snapshot", mode: "SNAPSHOT" }),
     okPan("Private Limited"),
@@ -529,7 +529,7 @@ const CHECKS: Record<string, CheckResult[]> = {
     mkCheck("esic", { verdict: "PASS", summary: "ESIC code active.", source: "ESIC (mock)", method: "api-mock", mode: "SIMULATED" }),
     mkCheck("cartel", {
       verdict: "FAIL", is_veto: true,
-      summary: "Cartel signal — shares director (DIN 03344556), bank (Union ••6410) and submission IP (182.72.30.5) with Garuda Facilities; near-identical pricing.",
+      summary: "Cartel signal · shares director (DIN 03344556), bank (Union ••6410) and submission IP (182.72.30.5) with Garuda Facilities; near-identical pricing.",
       source: "Entity graph", method: "graph", mode: "SIMULATED", confidence: 0.9,
       evidence: [
         ev("graph", "Shared DIN 03344556 with Garuda", "Entity graph", "graph", { relation: "same_director", peer: "Garuda Facilities" }),
@@ -541,7 +541,7 @@ const CHECKS: Record<string, CheckResult[]> = {
     mkCheck("experience", { verdict: "PASS", summary: "6 years services history.", source: "POs", method: "ocr", mode: "SIMULATED" }),
   ],
 
-  // B7 — cartel (HIGH)
+  // B7 · cartel (HIGH)
   b7: [
     mkCheck("debarment", { verdict: "PASS", summary: "No debarment match.", source: "CPPP snapshot", method: "snapshot", mode: "SNAPSHOT" }),
     okPan("Private Limited"),
@@ -553,7 +553,7 @@ const CHECKS: Record<string, CheckResult[]> = {
     mkCheck("esic", { verdict: "PASS", summary: "ESIC code active.", source: "ESIC (mock)", method: "api-mock", mode: "SIMULATED" }),
     mkCheck("cartel", {
       verdict: "FAIL", is_veto: true,
-      summary: "Cartel signal — shares director, bank and submission IP with Falcon Services; near-identical pricing.",
+      summary: "Cartel signal · shares director, bank and submission IP with Falcon Services; near-identical pricing.",
       source: "Entity graph", method: "graph", mode: "SIMULATED", confidence: 0.9,
       evidence: [
         ev("graph", "Shared DIN 03344556 with Falcon", "Entity graph", "graph", { relation: "same_director", peer: "Falcon Services" }),
@@ -564,7 +564,7 @@ const CHECKS: Record<string, CheckResult[]> = {
     mkCheck("experience", { verdict: "PASS", summary: "5 years services history.", source: "POs", method: "ocr", mode: "SIMULATED" }),
   ],
 
-  // B8 — startup scope WARN (MEDIUM)
+  // B8 · startup scope WARN (MEDIUM)
   b8: [
     mkCheck("debarment", { verdict: "PASS", summary: "No debarment match.", source: "CPPP snapshot", method: "snapshot", mode: "SNAPSHOT" }),
     okPan("Private Limited"),
@@ -574,7 +574,7 @@ const CHECKS: Record<string, CheckResult[]> = {
     mkCheck("turnover", { verdict: "PASS", summary: "Turnover within startup limits.", source: "GSTR", method: "rule", mode: "SIMULATED" }),
     mkCheck("startup", {
       verdict: "WARN",
-      summary: "DPIIT recognition valid, but exemption claimed on a RESOLD (non-innovative) item — scope check advised.",
+      summary: "DPIIT recognition valid, but exemption claimed on a RESOLD (non-innovative) item · scope check advised.",
       source: "DPIIT portal", method: "api-mock+rule", mode: "SIMULATED",
       evidence: [ev("rule", "Exemption scope vs offered item", "Startup rule", "rule", { dpiit: "DIPP45678", item: "resold workstation", innovative: false })],
     }),
@@ -584,7 +584,7 @@ const CHECKS: Record<string, CheckResult[]> = {
     mkCheck("cartel", { verdict: "PASS", summary: "No related-party links.", source: "Entity graph", method: "graph", mode: "SIMULATED" }),
   ],
 
-  // B9 — debarment veto (HIGH)
+  // B9 · debarment veto (HIGH)
   b9: [
     mkCheck("debarment", {
       verdict: "FAIL", is_veto: true,
@@ -656,10 +656,10 @@ function scoreFor(bidderId: string): ComplianceScore {
   const band: RiskBand = score >= 70 ? "LOW" : score >= 40 ? "MEDIUM" : "HIGH";
 
   const reasons_top: string[] = [];
-  for (const v of vetoes) reasons_top.push(`VETO: ${CHECK_META[v.key].short} — ${shortWhy(v.why)}`);
+  for (const v of vetoes) reasons_top.push(`VETO: ${CHECK_META[v.key].short} · ${shortWhy(v.why)}`);
   for (const c of checks) {
     if (reasons_top.length >= 5) break;
-    if (c.verdict === "WARN") reasons_top.push(`WARN: ${CHECK_META[c.key].short} — ${shortWhy(c.summary)}`);
+    if (c.verdict === "WARN") reasons_top.push(`WARN: ${CHECK_META[c.key].short} · ${shortWhy(c.summary)}`);
   }
   for (const c of checks) {
     if (reasons_top.length >= 5) break;
@@ -671,7 +671,7 @@ function scoreFor(bidderId: string): ComplianceScore {
 }
 
 function shortWhy(s: string): string {
-  const first = s.split(/[.;—]/)[0].trim();
+  const first = s.split(/[.;-]/)[0].trim();
   return first.length > 64 ? `${first.slice(0, 61)}…` : first;
 }
 
@@ -731,7 +731,7 @@ function docsFor(bidderId: string): DocumentRecord[] {
         summary: "Incremental update after signature; ELA anomaly at signature; validity expired.",
         incremental_updates: 2,
         copy_move_regions: 1,
-        ela_note: "ELA heatmap shows recompression around the signature block — consistent with post-sign editing.",
+        ela_note: "ELA heatmap shows recompression around the signature block · consistent with post-sign editing.",
         metadata_diff: [
           { field: "Author", before: "HydroMax Ltd", after: "unknown" },
           { field: "ModDate", before: "2024-11-02", after: "2026-09-10" },
@@ -922,7 +922,7 @@ export function graphFor(tenderId: string): EntityGraph {
         {
           id: "c2",
           bidder_ids: ["b4"],
-          reason: "Two conflicting PANs bound to one bidder — identity inconsistency between declared PAN and GSTIN PAN segment.",
+          reason: "Two conflicting PANs bound to one bidder · identity inconsistency between declared PAN and GSTIN PAN segment.",
           severity: "high",
         },
       ],
@@ -1140,7 +1140,7 @@ export function dashboardSummary(): DashboardSummary {
       id: "al-1",
       kind: "debarment",
       severity: "high",
-      title: "Debarment match — Indus Corp",
+      title: "Debarment match · Indus Corp",
       detail: "Director DIN 01928374 matches CPPP debarred list (0.96).",
       bidder_id: "b9",
       tender_id: "t3",
@@ -1159,7 +1159,7 @@ export function dashboardSummary(): DashboardSummary {
       id: "al-3",
       kind: "forgery",
       severity: "high",
-      title: "Forged OEM MAF — Chola Infra LLP",
+      title: "Forged OEM MAF · Chola Infra LLP",
       detail: "PDF edited after signing; ELA anomaly; validity expired.",
       bidder_id: "b3",
       tender_id: "t1",
@@ -1169,7 +1169,7 @@ export function dashboardSummary(): DashboardSummary {
       id: "al-4",
       kind: "mismatch",
       severity: "medium",
-      title: "Cross-portal PAN mismatch — Deccan Supplies",
+      title: "Cross-portal PAN mismatch · Deccan Supplies",
       detail: "PAN in GSTIN differs from declared PAN; GST cancelled.",
       bidder_id: "b4",
       tender_id: "t1",
@@ -1179,7 +1179,7 @@ export function dashboardSummary(): DashboardSummary {
       id: "al-5",
       kind: "mismatch",
       severity: "low",
-      title: "Udyam name mismatch — Bharat Micro Traders",
+      title: "Udyam name mismatch · Bharat Micro Traders",
       detail: "Udyam name differs from PAN name (fuzzy 0.78).",
       bidder_id: "b2",
       tender_id: "t1",

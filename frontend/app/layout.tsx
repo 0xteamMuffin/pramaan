@@ -20,7 +20,7 @@ const mukta = Mukta({
 });
 
 export const metadata: Metadata = {
-  title: "PRAMAAN — Bid Compliance Verification",
+  title: "PRAMAAN · Bid Compliance Verification",
   description:
     "AI-powered, evidence-first bid compliance verification for GeM procurement. Decision support for the procuring officer.",
 };

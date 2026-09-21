@@ -20,10 +20,10 @@ export function AppHeader({ onToggleNav }: { onToggleNav?: () => void }) {
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
-      <div className="mx-auto flex max-w-content items-center gap-3 px-4 py-2.5">
+    <header className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/85">
+      <div className="mx-auto flex h-14 w-full max-w-content items-center gap-3 px-4 sm:px-8">
         <button
-          className="rounded-md p-1.5 text-ink-700 hover:bg-surface-2 lg:hidden"
+          className="-ml-1 rounded-md p-1.5 text-ink-700 hover:bg-surface-2 lg:hidden"
           onClick={onToggleNav}
           aria-label="Toggle navigation"
         >
@@ -32,7 +32,7 @@ export function AppHeader({ onToggleNav }: { onToggleNav?: () => void }) {
         <Link href="/dashboard" className="no-hl shrink-0">
           <Wordmark />
         </Link>
-        <div className="ml-2 hidden flex-1 justify-center md:flex">
+        <div className="ml-4 hidden flex-1 md:flex">
           <GlobalSearch />
         </div>
         <div className="ml-auto flex items-center gap-3">
@@ -40,14 +40,14 @@ export function AppHeader({ onToggleNav }: { onToggleNav?: () => void }) {
           <div className="relative">
             <button
               onClick={() => setMenuOpen((o) => !o)}
-              className="flex items-center gap-2 rounded-full border border-border bg-surface-1 py-1 pl-1 pr-2 hover:bg-surface-2"
+              className="flex items-center gap-2 rounded-full border border-border bg-surface py-1 pl-1 pr-2 hover:bg-surface-2"
               aria-haspopup="menu"
               aria-expanded={menuOpen}
             >
               <UserCircle2 className="h-6 w-6 text-primary" aria-hidden />
               <span className="hidden text-left leading-tight sm:block">
                 <span className="block text-xs font-semibold text-ink-900">{user?.name ?? "Guest"}</span>
-                <span className="block text-2xs text-ink-500">{user?.org ?? "—"}</span>
+                <span className="block text-2xs text-ink-500">{user?.org ?? ""}</span>
               </span>
               <ChevronDown className="h-4 w-4 text-ink-500" aria-hidden />
             </button>
@@ -55,7 +55,7 @@ export function AppHeader({ onToggleNav }: { onToggleNav?: () => void }) {
               <>
                 <div className="fixed inset-0 z-30" onClick={() => setMenuOpen(false)} aria-hidden />
                 <div
-                  className="absolute right-0 z-40 mt-2 w-56 overflow-hidden rounded-input border border-border bg-surface shadow-popover"
+                  className="absolute right-0 z-40 mt-2 w-60 overflow-hidden rounded-input border border-border bg-surface shadow-popover"
                   role="menu"
                 >
                   <div className="border-b border-border px-3 py-2.5">

@@ -112,7 +112,7 @@ export default function AdminPage() {
           </dl>
           <div className="mt-4 flex flex-wrap items-center gap-3 rounded-input bg-surface-1 px-3 py-2.5 text-2xs text-ink-500">
             <KeyRound className="h-4 w-4 text-ink-500" aria-hidden />
-            Providers upgrade from SIMULATED to LIVE automatically when API keys are supplied — no
+            Providers upgrade from SIMULATED to LIVE automatically when API keys are supplied · no
             code change needed. Manage per-check modes on the{" "}
             <Link href="/providers" className="font-medium text-primary hover:underline">
               Providers
@@ -127,8 +127,8 @@ export default function AdminPage() {
 
 function SysItem({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="rounded-input border border-border bg-surface p-3">
-      <p className="text-2xs font-semibold uppercase tracking-wide text-ink-500">{label}</p>
+    <div className="rounded-input bg-surface-1 p-3">
+      <p className="text-2xs font-semibold text-ink-500">{label}</p>
       <p className="mt-1 text-sm font-medium text-ink-900">{value}</p>
     </div>
   );

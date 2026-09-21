@@ -11,16 +11,20 @@ import type {
   AuditIntegrity,
   BidVerdict,
   Bidder,
+  BidderCreated,
+  BidderCreateInput,
   ComparisonMatrix,
   DashboardSummary,
   DebarmentRecord,
   Decision,
   DecisionOutcome,
+  DocumentRecord,
   EntityGraph,
   LoginResponse,
   ProviderMode,
   ProviderState,
   Tender,
+  TenderCreateInput,
   TimeSavings,
   User,
 } from "./types";
@@ -182,6 +186,28 @@ export async function evaluateAll(tenderId: string): Promise<ApiResult<{ queued:
   return withFallback<{ queued: number }>(`/tenders/${tenderId}/evaluate`, demo, { method: "POST" });
 }
 
+/** Create a tender from an officer-defined requirement set. */
+export async function createTender(input: TenderCreateInput): Promise<ApiResult<Tender>> {
+  const demo: Tender = {
+    id: `t-${Date.now()}`,
+    ref_no: `GEM/2026/DEMO/${Math.floor(Math.random() * 9000 + 1000)}`,
+    title: input.title,
+    buyer_org: input.buyer_org,
+    category: input.category,
+    estimated_value: input.estimated_value,
+    status: "open",
+    created_at: new Date().toISOString(),
+    bidder_count: 0,
+    high_risk_count: 0,
+    requirements: input.requirements.map((r) => ({ ...r, weight_override: null })),
+    rule_summary: [],
+  };
+  return withFallback<Tender>("/tenders", demo, {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
 // ---- Bidders ------------------------------------------------------------------
 export async function getBidder(id: string): Promise<ApiResult<Bidder>> {
   const demo = DEMO_BIDDERS[id] ?? DEMO_BIDDERS.b1;
@@ -190,6 +216,93 @@ export async function getBidder(id: string): Promise<ApiResult<Bidder>> {
 
 export function listBidders(): Bidder[] {
   return Object.values(DEMO_BIDDERS);
+}
+
+/** Create a bidder and attach it to a tender as a bid. Returns bid_id. */
+export async function createBidder(input: BidderCreateInput): Promise<ApiResult<BidderCreated>> {
+  const id = `b-${Date.now()}`;
+  const demo: BidderCreated = {
+    id,
+    bid_id: `bid-${id}`,
+    legal_name: input.legal_name,
+    trade_name: input.trade_name ?? input.legal_name,
+    constitution: input.constitution,
+    primary_pan: input.primary_pan,
+    claimed_flags: {},
+    contact: { email: "", phone: "", address: "" },
+    identifiers: [
+      { kind: "PAN", value: input.primary_pan, format_valid: true, source: "declared" },
+      ...input.identifiers.map((i) => ({
+        kind: i.kind,
+        value: i.value,
+        format_valid: true,
+        source: "declared" as const,
+      })),
+    ],
+  };
+  return withFallback<BidderCreated>("/bidders", demo, {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+/**
+ * Upload a document (multipart) for forensic + extraction analysis. Returns a
+ * DocumentRecord with a live forensic verdict. A filename containing "tamper",
+ * "forged" or "edited" yields a demo FAIL so the forgery reveal works offline.
+ */
+export async function uploadDocument(
+  bidderId: string,
+  file: File,
+  docType: string,
+): Promise<ApiResult<DocumentRecord>> {
+  const suspicious = /tamper|for/i.test(file.name) || /forged|edited|fake/i.test(file.name);
+  const demo: DocumentRecord = {
+    id: `doc-${Date.now()}`,
+    bidder_id: bidderId,
+    doc_type: docType,
+    file_hash: `sha256:${(file.size * 2654435761 % 0xffffffff).toString(16)}`,
+    source: "uploaded",
+    extraction_confidence: suspicious ? 0.71 : 0.95,
+    extracted: {
+      file_name: file.name,
+      size_kb: Math.max(1, Math.round(file.size / 1024)),
+      detected_type: docType.replace(/_/g, " "),
+    },
+    forensics: suspicious
+      ? {
+          verdict: "FAIL",
+          summary:
+            "Tamper indicators detected: PDF was modified after signing and the signature region shows recompression.",
+          incremental_updates: 2,
+          copy_move_regions: 1,
+          ela_note:
+            "ELA heatmap shows recompression around the signature block, consistent with post-sign editing.",
+          metadata_diff: [
+            { field: "ModDate", before: "2024-11-02", after: "2026-09-10" },
+            { field: "Producer", before: "Adobe PDF Library", after: "PDFsharp" },
+          ],
+        }
+      : { verdict: "PASS", summary: "No tampering indicators detected." },
+    thumbnail_label: docType
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
+  };
+
+  const form = new FormData();
+  form.append("doc_type", docType);
+  form.append("file", file);
+  try {
+    const res = await fetch(`${API_BASE}/bidders/${bidderId}/documents`, {
+      method: "POST",
+      headers: { ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}) },
+      body: form,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return { data: (await res.json()) as DocumentRecord, mode: "live" };
+  } catch (err) {
+    return { data: demo, mode: "demo", error: err instanceof Error ? err.message : "network error" };
+  }
 }
 
 // ---- Verification / verdict ---------------------------------------------------

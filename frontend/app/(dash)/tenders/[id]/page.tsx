@@ -2,7 +2,7 @@
 
 import { use, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, Download, Network, PlayCircle } from "lucide-react";
+import { CheckCircle2, Download, Network, PlayCircle, UserPlus } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -65,7 +65,12 @@ export default function TenderDetailPage({ params }: { params: Promise<{ id: str
         mode={tender.mode}
         actions={
           <>
-            <Button variant="accent" size="sm" onClick={handleEvaluate} loading={evaluating}>
+            <Link href={`/tenders/${id}/add-bidder`}>
+              <Button variant="accent" size="sm">
+                <UserPlus className="h-4 w-4" /> Add bidder
+              </Button>
+            </Link>
+            <Button variant="secondary" size="sm" onClick={handleEvaluate} loading={evaluating}>
               <PlayCircle className="h-4 w-4" /> Evaluate all
             </Button>
             <Link href={`/tenders/${id}/graph`}>
@@ -130,7 +135,7 @@ export default function TenderDetailPage({ params }: { params: Promise<{ id: str
         <div className="flex flex-wrap items-center justify-between gap-2 p-5 pb-3">
           <CardHeader
             title="Bidder comparison matrix"
-            description="Rows = bidders · columns = checks · last column = score & risk band. Sorted by score."
+            description="One row per bidder, one column per check. The final column is the compliance score and risk band, sorted highest first."
             className="mb-0"
           />
           <MatrixLegend />
@@ -149,18 +154,18 @@ export default function TenderDetailPage({ params }: { params: Promise<{ id: str
             <table className="w-full border-separate border-spacing-0 text-sm">
               <thead>
                 <tr>
-                  <th className="sticky left-0 z-20 border-b border-border bg-surface-1 px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wide text-ink-500">
+                  <th className="sticky left-0 z-20 border-b border-border bg-surface-1 px-4 py-3 text-left text-2xs font-semibold text-ink-500">
                     Bidder
                   </th>
                   {matrix.data.check_keys.map((k) => (
                     <th
                       key={k}
-                      className="border-b border-border bg-surface-1 px-2 py-3 text-center text-2xs font-semibold uppercase tracking-wide text-ink-500"
+                      className="border-b border-border bg-surface-1 px-2 py-3 text-center text-2xs font-semibold text-ink-500"
                     >
                       {checkShort(k)}
                     </th>
                   ))}
-                  <th className="sticky right-0 z-20 border-b border-l border-border bg-surface-1 px-4 py-3 text-right text-2xs font-semibold uppercase tracking-wide text-ink-500">
+                  <th className="sticky right-0 z-20 border-b border-l border-border bg-surface-1 px-4 py-3 text-right text-2xs font-semibold text-ink-500">
                     Score · Risk
                   </th>
                 </tr>
@@ -216,7 +221,7 @@ export default function TenderDetailPage({ params }: { params: Promise<{ id: str
 function Meta({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <dt className="text-2xs font-semibold uppercase tracking-wide text-ink-500">{label}</dt>
+      <dt className="text-2xs font-semibold text-ink-500">{label}</dt>
       <dd className="mt-0.5 text-sm font-medium text-ink-900">{value}</dd>
     </div>
   );

@@ -8,6 +8,7 @@ import { SidePanel } from "@/components/ui/SidePanel";
 import { EvidencePanel } from "./EvidencePanel";
 import { Button } from "@/components/ui/Button";
 import { CHECK_META, DIMENSION_LABELS, checkLabel } from "@/lib/checks";
+import { cleanText } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { CheckResult, Verdict } from "@/lib/types";
 
@@ -39,7 +40,7 @@ export function ChecksAccordion({ checks }: { checks: CheckResult[] }) {
       <ul className="divide-y divide-border">
         {sorted.map((check) => {
           const isOpen = expanded === check.key;
-          const meta = CHECK_META[check.key];
+          const dimension = CHECK_META[check.key]?.dimension ?? check.dimension;
           return (
             <li key={check.key}>
               <button
@@ -54,10 +55,10 @@ export function ChecksAccordion({ checks }: { checks: CheckResult[] }) {
                       {checkLabel(check.key)}
                     </span>
                     <span className="hidden rounded-full bg-surface-2 px-1.5 py-0.5 text-2xs text-ink-500 sm:inline">
-                      {DIMENSION_LABELS[meta.dimension]}
+                      {DIMENSION_LABELS[dimension]}
                     </span>
                   </span>
-                  <span className="mt-0.5 block truncate text-2xs text-ink-500">{check.summary}</span>
+                  <span className="mt-0.5 block truncate text-2xs text-ink-500">{cleanText(check.summary)}</span>
                 </span>
                 <ChevronDown
                   aria-hidden
@@ -66,7 +67,7 @@ export function ChecksAccordion({ checks }: { checks: CheckResult[] }) {
               </button>
               {isOpen && (
                 <div className="animate-fade-in bg-surface-1 px-5 py-4">
-                  <p className="text-sm text-ink-700">{check.summary}</p>
+                  <p className="text-sm text-ink-700">{cleanText(check.summary)}</p>
                   <ProvenanceStamp
                     className="mt-2"
                     source={check.source}
@@ -81,7 +82,7 @@ export function ChecksAccordion({ checks }: { checks: CheckResult[] }) {
                           <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
                           <span>
                             <span className="font-medium text-ink-900">{e.label}</span>
-                            <span className="text-ink-500"> — {e.source} · {e.method}</span>
+                            <span className="text-ink-500"> · {e.source} · {e.method}</span>
                           </span>
                         </li>
                       ))}
@@ -106,7 +107,7 @@ export function ChecksAccordion({ checks }: { checks: CheckResult[] }) {
         open={!!panelCheck}
         onClose={() => setPanelCheck(null)}
         title={panelCheck ? checkLabel(panelCheck.key) : "Evidence"}
-        subtitle="Evidence drill-down — what was checked, from where, and when."
+        subtitle="Evidence drill-down · what was checked, from where, and when."
         width="xl"
       >
         {panelCheck && <EvidencePanel check={panelCheck} />}

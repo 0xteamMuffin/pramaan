@@ -26,7 +26,7 @@ export function SortHeader({
     <button
       onClick={onSort}
       className={cn(
-        "flex w-full items-center gap-1 text-2xs font-semibold uppercase tracking-wide text-ink-500 hover:text-ink-900",
+        "flex w-full items-center gap-1 text-xs font-semibold text-ink-500 hover:text-ink-900",
         align === "right" && "justify-end",
         align === "center" && "justify-center",
         className,

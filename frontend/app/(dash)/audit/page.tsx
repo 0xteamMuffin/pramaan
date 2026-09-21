@@ -57,7 +57,7 @@ export default function AuditPage() {
     <div>
       <PageHeader
         title="Audit trail"
-        description="Append-only, hash-chained record of every mutation. Tamper-evident — each event's hash includes the previous event's hash."
+        description="Append-only, hash-chained record of every mutation. Tamper-evident · each event's hash includes the previous event's hash."
         mode={mode}
         actions={
           <>
@@ -82,7 +82,7 @@ export default function AuditPage() {
         >
           {integrity.intact ? <ShieldCheck className="h-5 w-5" /> : <ShieldX className="h-5 w-5" />}
           {integrity.intact
-            ? `Chain intact — ${integrity.count} events verified end-to-end.`
+            ? `Chain intact · ${integrity.count} events verified end-to-end.`
             : `Chain BROKEN at sequence ${integrity.broken_at_seq}. Tampering detected.`}
         </div>
       )}

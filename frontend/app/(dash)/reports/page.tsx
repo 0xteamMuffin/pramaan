@@ -86,7 +86,7 @@ export default function ReportsPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] text-sm">
               <thead className="bg-surface-1">
-                <tr className="border-b border-border text-left text-2xs uppercase tracking-wide text-ink-500">
+                <tr className="border-b border-border text-left text-xs font-semibold text-ink-500">
                   <th className="px-4 py-3">Bidder</th>
                   <th className="px-4 py-3">Tender</th>
                   <th className="px-4 py-3 text-right">Score</th>
@@ -141,7 +141,7 @@ export default function ReportsPage() {
 
       <p className="mt-4 text-2xs text-ink-500">
         Reports are generated server-side (reportlab). If the backend is unreachable the download
-        link will be unavailable — start the API to enable PDF export.
+        link will be unavailable · start the API to enable PDF export.
       </p>
     </div>
   );

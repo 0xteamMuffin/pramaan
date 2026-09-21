@@ -18,8 +18,8 @@ const BAND_VAR: Record<RiskBand, string> = {
 };
 
 /**
- * Radial 0–100 score gauge (270° sweep) coloured by RAG band, with a big number
- * and band label. Uses two SVG arcs (track + progress) — no chart dependency.
+ * Radial 0-100 score gauge (270° sweep) coloured by RAG band, with a big number
+ * and band label. Uses two SVG arcs (track + progress) · no chart dependency.
  */
 export function ScoreGauge({
   score,

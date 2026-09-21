@@ -87,7 +87,7 @@ export default function ProvidersPage() {
               <p className="text-sm font-semibold text-ink-900">Global offline mode</p>
               <p className="mt-0.5 max-w-lg text-sm text-ink-500">
                 Forces local AI (Heuristic) and mock / snapshot providers. Demonstrates that PRAMAAN
-                keeps working with zero external dependencies — the empty-key guarantee.
+                keeps working with zero external dependencies · the empty-key guarantee.
               </p>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function ProvidersPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] text-sm">
               <thead className="bg-surface-1">
-                <tr className="border-b border-border text-left text-2xs uppercase tracking-wide text-ink-500">
+                <tr className="border-b border-border text-left text-xs font-semibold text-ink-500">
                   <th className="px-4 py-3">Check</th>
                   <th className="px-4 py-3">Fallback chain</th>
                   <th className="px-4 py-3">Health</th>

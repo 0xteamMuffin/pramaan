@@ -122,6 +122,17 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Display headings: tight tracking, balanced wrapping (design-system §2) */
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+h1 {
+  letter-spacing: -0.03em;
+}
+
 /* Tabular numbers for scores / tables */
 .tnum {
   font-variant-numeric: tabular-nums;
@@ -194,6 +205,63 @@ body {
   text-underline-offset: 2px;
 }
 
+/* ============================================================================
+   Motion — intentional, state-conveying, 150-260ms ease-out (design §Motion)
+   ========================================================================== */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes draw-dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* On-load reveal used by the landing page. Staggered via inline --d delay. */
+.reveal {
+  opacity: 0;
+  animation: reveal-up 0.66s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+.reveal-fade {
+  opacity: 0;
+  animation: reveal-in 0.8s ease-out forwards;
+  animation-delay: var(--d, 0ms);
+}
+.float-slow {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+/* Institutional dotted grid + radial glow for landing hero panels */
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -202,5 +270,10 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+  .reveal,
+  .reveal-fade {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

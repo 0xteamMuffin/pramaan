@@ -11,7 +11,7 @@ interface ProvenanceStampProps {
   className?: string;
 }
 
-/** "source · method · as on <ts>" + mode badge — shown on every data point. */
+/** "source · method · as on <ts>" + mode badge · shown on every data point. */
 export function ProvenanceStamp({
   source,
   method,
